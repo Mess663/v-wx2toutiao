@@ -1,5 +1,5 @@
 # 小程序搬家工具
-本工具基于wx2baidu工具修改而成（原仓库：https://github.com/yican008/wx2swan）
+本工具基于wx2baidu工具修改而成（原仓库：[wx2swan](https://github.com/yican008/wx2swan)，这个源码可以从npm包里拿）
 
 ## Introduction:
 > 这个工具依赖头条的[搬家工具](https://developer.toutiao.com/dev/cn/mini-app/develop/developer-instrument/development-assistance/one-key-move)，但头条的搬家工具的转换效果很差，需要扩展功能。更过分的是头条不开源，所以没法直接在其源码基础上修改。只能借助一个开源的[百度搬家工具](https://github.com/yican008/wx2swan)修改而来，在运行本工具时，会自动运行一遍头条的搬家工具。目前也没办法百分百将微信小程序转换为可运转的头条小程序，详见下文。
@@ -14,7 +14,6 @@
 1. wxs头条不支持，所以需要手动修改；
 2. component没有observe；
 3. 头条小程序不支持nextTick，建议手动替换为setTimeout；
-4. 空闲的slot，会导致组件重复渲染；(这点存疑，仅供参考)
 
 ## Quick Start
 1.安装
