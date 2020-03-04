@@ -8,9 +8,6 @@
 'use strict';
 
 const _ = require('lodash');
-const path = require('path');
-const regexgen = require('regexgen');
-const tranformBindDataConifg = require('../../../tranform-bind-data-conifg');
 const utils = require('../../util');
 const chalk = require('chalk');
 
