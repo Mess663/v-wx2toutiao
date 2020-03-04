@@ -21,6 +21,7 @@
 cd <project>
 npm link
 ```
+> 由于link是全局安装，所以mac可能会报错，命令前加上`sudo`即可
 
 2.使用 
 ```js
