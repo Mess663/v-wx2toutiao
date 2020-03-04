@@ -47,39 +47,30 @@ module.exports.transformViewContent = function (path, contents, context, pathLis
 module.exports.transformView = function* transformView(context, pathList) {
     const end = utils.load('transforming config file')
     context.allLoading.push(end)
-    const xmlFiles = yield new Promise(resolve => {
-        let filePath = context.dist;
-        // 添加支持单一文件入口逻辑
-        if (utils.isDirectory(filePath)) {
-            filePath = filePath + '/**/*.xml';
-        }
-        const extname = path.extname(filePath);
-        if (extname === '.xml') {
-            glob(filePath, function (err, res) {
-                resolve(err ? [] : res);
-            });
-        } else {
-            resolve([]);
-        }
-    });
 
-    const ttmlFiles = yield new Promise(resolve => {
-        let filePath = context.dist;
-        // 添加支持单一文件入口逻辑
-        if (utils.isDirectory(filePath)) {
-            filePath = filePath + '/**/*.ttml';
-        }
-        const extname = path.extname(filePath);
-        if (extname === '.ttml') {
-            glob(filePath, function (err, res) {
-                resolve(err ? [] : res);
-            });
-        } else {
-            resolve([]);
-        }
-    });
+    const allPromise = ['xml', 'wxml', 'ttml'].map((item) => {
+        return new Promise(resolve => {
+            let filePath = context.dist;
+            // 添加支持单一文件入口逻辑
+            if (utils.isDirectory(filePath)) {
+                filePath = filePath + `/**/*.${item}`;
+            }
+            const extname = path.extname(filePath);
+            if (extname === `.${item}`) {
+                glob(filePath, function (err, res) {
+                    resolve(err ? [] : res);
+                });
+            } else {
+                resolve([]);
+            }
+        })
+    }, [])
 
-    const files = xmlFiles.concat(ttmlFiles)
+    const files = yield Promise.all(allPromise).then(
+        (allFiles) => allFiles.reduce((all, list) => {
+            return all.concat(list)
+        }, [])
+    )
 
     for (let i = 0; i < files.length; i++) {
         const content = yield utils.getContent(files[i]);

@@ -47,23 +47,31 @@ exports.transformCssContent = function transformCssContent(content, root, f) {
 exports.transformCss = function* transformCss(form) {
     const end = utils.load('transforming config file')
     form.allLoading.push(end)
+
+    const allPromise = ['less', 'sass', 'wxss', 'ttss'].map((item) => {
+        return new Promise(resolve => {
+            let filePath = form.dist;
+            // 添加支持单一文件入口逻辑
+            if (utils.isDirectory(filePath)) {
+                filePath = filePath + `/pages/**/*.${item}`;
+            }
+            const extname = path.extname(filePath);
+            if (extname === `.${item}`) {
+                glob(filePath, function (err, res) {
+                    resolve(err ? [] : res);
+                });
+            } else {
+                resolve([]);
+            }
+        })
+    }, [])
+
+    const files = yield Promise.all(allPromise).then(
+        (allFiles) => allFiles.reduce((all, list) => {
+            return all.concat(list)
+        }, [])
+    )
     
-    const files = yield new Promise(resolve => {
-        let filePath = form.dist;
-        const ext = 'less';
-        // 添加支持单一文件入口逻辑
-        if (utils.isDirectory(filePath)) {
-            filePath = filePath + '/pages/**/*.' + ext;
-        }
-        const extname = path.extname(filePath);
-        if (extname === '.' + ext) {
-            glob(filePath, function (err, files) {
-                resolve(err ? [] : files);
-            });
-        } else {
-            resolve([]);
-        }
-    });
     let content;
     
     for (let i = 0; i < files.length; i++) {
