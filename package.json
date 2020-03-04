@@ -87,10 +87,6 @@
     "type": "git"
   },
   "scripts": {
-    "build": "gulp build",
-    "prepublishOnly": "npm run build",
-    "test": "jest",
-    "zip": "sh zip.sh"
   },
   "version": "1.2.20"
 }
